@@ -1,102 +1,67 @@
 use std::io;
 
-
 fn main() {
     let mut todo_list: Vec<String> = Vec::new();
     let mut finished_list: Vec<String> = Vec::new();
 
     loop {
-        print!("{}[2J", 27 as char);
-        println!("Please choose an option:");
-        println!("1. Create new todo");
-        println!("2. View all todos");
-        println!("3. View finished todos");
-        println!("4. Mark todo as finished");
-        println!("5. Exit");
+        // println!("Please enter a command:");
+        // println!("addtodo - Create new todo");
+        // println!("todolist - View all todos");
+        // println!("tododone - Mark todo as finished");
+        // println!("done - View finished todos");
+        // println!("exit - Exit");
 
-        let mut option = String::new();
-        io::stdin().read_line(&mut option).expect("Failed to read line");
-        let option: u32 = match option.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
+        let mut command = String::new();
+        io::stdin().read_line(&mut command).expect("Failed to read line");
+        let command: String = command.trim().to_string();
 
-        match option {
-            1 => {
-                print!("{}[2J", 27 as char);
+        match command.as_str() {
+            "addtodo" => {
                 println!("Enter the new todo:");
                 let mut new_todo = String::new();
                 io::stdin().read_line(&mut new_todo).expect("Failed to read line");
                 todo_list.push(new_todo.trim().to_string());
                 println!("New todo created!");
             }
-            2 => {
-                loop {
-                    print!("{}[2J", 27 as char);
-                    println!("All todos:");
-                    for (index, task) in todo_list.iter().enumerate() {
-                        println!("{}: {}", index + 1, task);
-                    }
-                    println!("Enter 0 to return to the main menu");
-                    let mut option = String::new();
-                    io::stdin().read_line(&mut option).expect("Failed to read line");
-                    let option: u32 = match option.trim().parse() {
-                        Ok(num) => num,
-                        Err(_) => continue,
-                    };
-                    if option == 0 {
-                        break;
-                    }
-                }
-            }
-            3 => {
-                loop {
-                    print!("{}[2J", 27 as char);
-                    println!("Finished todos:");
-                    for (index, task) in finished_list.iter().enumerate() {
-                        println!("{}: {}", index + 1, task);
-                    }
-                    println!("Enter 0 to return to the main menu");
-                    let mut option = String::new();
-                    io::stdin().read_line(&mut option).expect("Failed to read line");
-                    let option: u32 = match option.trim().parse() {
-                        Ok(num) => num,
-                        Err(_) => continue,
-                    };
-                    if option == 0 {
-                        break;
-                    }
-                }
-            }
-            4 => {
-                print!("{}[2J", 27 as char);
+            "todolist" => {
                 println!("All todos:");
-                    for (index, task) in todo_list.iter().enumerate() {
-                        println!("{}: {}", index + 1, task);
-                    }
-                println!("\n \n");
-                println!("Enter the index of the todo to mark as finished:");
-                let mut index_str = String::new();
-                io::stdin().read_line(&mut index_str).expect("Failed to read line");
-                let index: usize = match index_str.trim().parse() {
+                for (index, task) in todo_list.iter().enumerate() {
+                    println!("{}: {}", index + 1, task);
+                }
+            }
+            "tododone" => {
+                println!("All todos:");
+                for (index, task) in todo_list.iter().enumerate() {
+                    println!("{}: {}", index + 1, task);
+                }
+                println!("\n\n\n");
+                println!("Enter the ID of the todo to mark as finished:");
+                let mut id = String::new();
+                io::stdin().read_line(&mut id).expect("Failed to read line");
+                let id: usize = match id.trim().parse() {
                     Ok(num) => num,
                     Err(_) => continue,
                 };
-
-                if index >= 1 && index <= todo_list.len() {
-                    let finished_todo = todo_list.remove(index - 1);
-                    finished_list.push(finished_todo);
-                    println!("Todo marked as finished!");
-                } else {
-                    println!("Invalid index!");
+                if id == 0 || id > todo_list.len() {
+                    println!("Invalid ID");
+                    continue;
+                }
+                let finished_todo = todo_list.remove(id - 1);
+                finished_list.push(finished_todo);
+                println!("Todo marked as finished!");
+            }
+            "done" => {
+                println!("Finished todos:");
+                for (index, task) in finished_list.iter().enumerate() {
+                    println!("{}: {}", index + 1, task);
                 }
             }
-            5 => {
-                println!("Exiting...");
+            "exit" => {
                 break;
             }
             _ => {
-                println!("Invalid option!");
+                println!("Invalid command");
             }
         }
     }
